@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="세부 시티투어 출발지·도착지와 가고 싶은 곳을 고르면 가장 짧은 방문 순서, 시간대별 일정, 막탄↔세부 다리(제1·2·3), 예상 차량 요금을 계산해 주는 무료 계산기. 투윙스 세부 자유여행.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="세부 시티투어 순서·시간 계산기">
+<meta property="og:description" content="세부 시티투어 출발지·도착지와 가고 싶은 곳을 고르면 가장 짧은 방문 순서, 시간대별 일정, 막탄↔세부 다리(제1·2·3), 예상 차량 요금을 계산해 주는 무료 계산기. 투윙스 세부 자유여행.">
+<meta property="og:locale" content="ko_KR">
+<meta name="theme-color" content="#0d5c63">
+<link rel="canonical" href="https://cebuphiliip.github.io/cebu-citytour/">
+<meta property="og:url" content="https://cebuphiliip.github.io/cebu-citytour/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "세부 시티투어 순서·시간 계산기", "description": "세부 시티투어 출발지·도착지와 가고 싶은 곳을 고르면 가장 짧은 방문 순서, 시간대별 일정, 막탄↔세부 다리(제1·2·3), 예상 차량 요금을 계산해 주는 무료 계산기. 투윙스 세부 자유여행.", "applicationCategory": "TravelApplication", "operatingSystem": "Any", "inLanguage": "ko", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}, "publisher": {"@type": "Organization", "name": "투윙스 세부 자유여행", "url": "https://cafe.naver.com/freetourincebu"}}</script>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>시티투어 경로 계산기</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@600;700&display=swap">
+<style>
+/* 레이아웃: 좁은 단일 칼럼, 얇은 선으로 나뉜 세 단계(순서가 있는 입력) + 시간선 결과. 청록 잉크 + 황동 포인트. */
+:root{--bg:#eef2f3;--card:#ffffff;--ink:#0f2830;--sub:#5a6e75;--line:#d9e1e3;--soft:#f4f7f8;--accent:#0d5c63;--accent-ink:#ffffff;--brass:#9a7b3a;--warn:#a8321f;--warnbg:#fbeeea;
+  --serif:"Noto Serif KR","Nanum Myeongjo",Georgia,serif;--sans:"Noto Sans KR","Malgun Gothic","Apple SD Gothic Neo",sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1a1f;--card:#14262d;--ink:#e9f0f2;--sub:#93a8af;--line:#27404a;--soft:#102128;--accent:#5fc2c9;--accent-ink:#06242a;--brass:#d2b269;--warn:#ff9b87;--warnbg:#3b1f1a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1a1f;--card:#14262d;--ink:#e9f0f2;--sub:#93a8af;--line:#27404a;--soft:#102128;--accent:#5fc2c9;--accent-ink:#06242a;--brass:#d2b269;--warn:#ff9b87;--warnbg:#3b1f1a;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding-block:36px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{margin-bottom:26px}
+.eyebrow{font-size:.72rem;letter-spacing:.18em;color:var(--brass);font-weight:700;text-transform:uppercase}
+h1{font:700 1.75rem/1.3 var(--serif);margin:.35em 0 .3em;text-wrap:balance;letter-spacing:-.01em}
+.lead{color:var(--sub);margin:0;max-width:34em}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px 22px 20px;margin-bottom:16px}
+.sec h2{display:flex;align-items:baseline;gap:12px;font:600 1.1rem/1.3 var(--serif);margin:0 0 16px}
+.sec h2 .n{font:600 .8rem var(--sans);color:var(--brass);letter-spacing:.12em}
+.sec h2 .cnt{margin-left:auto;font:500 .8rem var(--sans);color:var(--sub)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:560px){.row{grid-template-columns:1fr}.sec{padding:18px 16px}}
+.fld{min-width:0}
+label.f{display:block;font-size:.78rem;color:var(--sub);margin-bottom:6px;letter-spacing:.04em}
+select,input[type=time],input[type=text]{width:100%;min-height:44px;padding:9px 12px;border:1px solid var(--line);border-radius:4px;background:var(--soft);color:var(--ink);font:inherit;font-size:.95rem}
+select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.coord{margin-top:8px}
+.coord input{font-variant-numeric:tabular-nums}
+.help{font-size:.78rem;color:var(--sub);margin-top:6px;line-height:1.5}
+.err{font-size:.8rem;color:var(--warn);margin-top:6px}
+.ok{font-size:.8rem;color:var(--accent);margin-top:6px}
+.hint{font-size:.8rem;color:var(--sub);margin-top:12px}
+.grp{font-size:.72rem;letter-spacing:.14em;color:var(--brass);font-weight:700;margin:18px 0 4px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.grp:first-child{margin-top:0}
+.pl{display:flex;align-items:center;gap:12px;padding:9px 2px;border-bottom:1px solid var(--line)}
+.pl:last-child{border-bottom:0}
+.pl label.chk{display:flex;align-items:flex-start;gap:12px;flex:1;min-width:0;cursor:pointer}
+.pl input[type=checkbox]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--accent);flex:none}
+.pl .nm{display:block;font-weight:500}
+.pl small{display:block;color:var(--sub);font-size:.76rem;line-height:1.4;font-weight:400}
+.stay{flex:none;display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--sub)}
+.stay select{width:auto;min-height:36px;padding:4px 8px;font-size:.85rem}
+.stay[hidden]{display:none}
+@media (max-width:560px){.pl{flex-wrap:wrap}.stay{margin-left:32px}}
+.btnrow{display:flex;gap:10px;margin-top:4px}
+button{font:inherit;cursor:pointer}
+#go{flex:1;background:var(--accent);color:var(--accent-ink);border:0;border-radius:4px;min-height:50px;font-weight:700;font-size:1rem;letter-spacing:.04em}
+#clr{background:transparent;color:var(--sub);border:1px solid var(--line);border-radius:4px;padding:0 16px;min-height:50px}
+#out{margin-top:20px}
+.sum{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:4px;margin-bottom:22px;background:var(--soft)}
+.sum div{padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+.sum div:last-child{border-right:0}
+.sum b{display:block;font:700 1.15rem var(--serif);color:var(--accent);font-variant-numeric:tabular-nums}
+.sum span{font-size:.72rem;color:var(--sub)}
+ol.route{list-style:none;margin:0;padding:0}
+ol.route li{position:relative;padding:0 0 18px 44px}
+ol.route li::before{content:"";position:absolute;left:15px;top:32px;bottom:2px;width:1px;background:var(--line)}
+ol.route li:last-child{padding-bottom:0}
+ol.route li:last-child::before{display:none}
+.dot{position:absolute;left:0;top:0;width:31px;height:31px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);background:var(--card);text-align:center;line-height:29px;font:600 .82rem var(--serif)}
+.dot.end{border-color:var(--brass);color:var(--brass)}
+.leg{font-size:.78rem;color:var(--sub);margin:0 0 6px;font-variant-numeric:tabular-nums}
+.name{font:600 1.02rem var(--serif)}
+.tm{font-size:.84rem;color:var(--sub);font-variant-numeric:tabular-nums}
+.tm b{color:var(--ink);font-weight:500}
+.warn{background:var(--warnbg);color:var(--warn);border-radius:4px;padding:6px 10px;margin-top:6px;font-size:.8rem}
+.fee{border-top:1px solid var(--line);margin-top:20px;padding-top:14px;font-size:.86rem}
+.fee b{font:600 .95rem var(--serif)}
+.bill{width:100%;border-collapse:collapse;margin:10px 0 4px;font-variant-numeric:tabular-nums}
+.bill td{padding:6px 0;border-bottom:1px solid var(--line)}
+.bill td:last-child{text-align:right;white-space:nowrap;padding-left:12px}
+.bill tfoot td{border-bottom:0;font:700 1.05rem var(--serif);color:var(--accent);padding-top:10px}
+ul.br{list-style:none;margin:8px 0 0;padding:0}
+ul.br li{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:6px 0;border-bottom:1px solid var(--line)}
+ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
+.faq h3{font:600 .95rem/1.5 var(--serif);margin:16px 0 4px}
+.faq h3:first-of-type{margin-top:0}
+.faq p{margin:0;color:var(--sub);font-size:.86rem}
+.foot{text-align:center;font-size:.8rem;color:var(--sub);margin-top:8px}
+.foot a{color:var(--accent)}
+.share{margin-top:14px}
+.share button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:4px;min-height:42px;padding:0 16px;font-weight:500}
+.share input{margin-top:8px;font-size:.8rem}
+.notes{font-size:.82rem;color:var(--sub)}
+.notes h2{color:var(--ink)}
+.notes ul{margin:0;padding-left:18px}
+.notes li{margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Cebu City Tour Planner</div>
+    <h1>세부 시티투어 순서·시간 계산기</h1>
+    <p class="lead">출발지와 도착지, 가고 싶은 곳, 곳마다 머물 시간을 정하면 이동이 가장 짧은 순서와 시간대별 일정을 계산합니다.</p>
+  </header>
+
+  <section class="sec">
+    <h2><span class="n">STEP 1</span>출발지와 도착지</h2>
+    <div class="row">
+      <div class="fld">
+        <label class="f" for="s">출발지</label><select id="s"></select>
+        <div class="coord" id="sc" hidden><input type="text" id="sci" placeholder="예) 10.2965, 123.9830" inputmode="decimal" autocomplete="off"><div id="scm"></div></div>
+      </div>
+      <div class="fld">
+        <label class="f" for="e">도착지</label><select id="e"></select>
+        <div class="coord" id="ec" hidden><input type="text" id="eci" placeholder="예) 10.2965, 123.9830" inputmode="decimal" autocomplete="off"><div id="ecm"></div></div>
+      </div>
+    </div>
+    <div class="help">숙소·공항 8곳 외에 구글맵 좌표를 직접 넣을 수 있습니다. 구글맵에서 장소를 길게 누르면 나오는 숫자(위도, 경도)를 복사해 붙여 넣으세요. 주소창에 <b>@10.29,123.98</b> 같은 숫자가 보이는 긴 링크도 읽습니다. 직접 넣은 좌표는 가까운 도로 기준으로 시간을 어림잡습니다.</div>
+  </section>
+
+  <section class="sec">
+    <h2><span class="n">STEP 2</span>가고 싶은 곳<span class="cnt" id="cnt"></span></h2>
+    <div id="pl"></div>
+    <div class="help">곳마다 머물 시간을 고를 수 있습니다. 처음 보이는 시간은 일반적인 관람 시간으로 잡은 임의 값이니 일정에 맞게 바꿔 주세요.</div>
+  </section>
+
+  <section class="sec">
+    <h2><span class="n">STEP 3</span>출발 시각과 차량</h2>
+    <div class="row"><div class="fld"><label class="f" for="st">출발 시각</label><input type="time" id="st" value="09:00"></div>
+    <div class="fld"><label class="f" for="veh">차량</label><select id="veh"><option value="van">11인승 밴</option><option value="suv">7인승 SUV (10달러 할인)</option></select></div></div>
+  </section>
+
+  <div class="btnrow"><button id="go" type="button">순서 계산하기</button><button id="clr" type="button">초기화</button></div>
+
+  <div id="out"></div>
+
+  <section class="sec faq" style="margin-top:20px">
+    <h2>세부 시티투어 일정 짜기 자주 묻는 질문</h2>
+    <h3>막탄에서 세부시티로 갈 때 어떤 다리를 건너나요?</h3>
+    <p>막탄과 세부 본섬은 세 개의 다리로 이어집니다. 제1 다리(올드 브릿지, Sergio Osmeña Jr. Bridge), 제2 다리(뉴 브릿지, Marcelo Fernan Bridge), 제3 다리(CCLEX, Cebu-Cordova Link Expressway)입니다. 어느 다리가 빠른지는 출발지와 목적지에 따라 달라지고, 제3 다리는 유료도로입니다. 이 계산기는 구간마다 평시 최단 기준으로 건너는 다리를 알려 줍니다.</p>
+    <h3>시티투어 차량 요금은 어떻게 계산하나요?</h3>
+    <p>내맘대로 시티투어 요금은 11인승 밴 기준 기본 2시간 30달러에 추가 1시간마다 10달러이고, 7인승 SUV는 10달러 할인됩니다. 시라오 가든 10달러, 시티 외곽 운행 10달러, 1시간 추가 대상 장소 곳당 10달러가 더해지며 입장료는 별도입니다. 기준일은 2026년 10월 26일이고, 정확한 견적은 상담으로 안내드립니다.</p>
+    <h3>출퇴근 시간에는 이동시간이 얼마나 늘어나나요?</h3>
+    <p>세부는 오전 7시~9시 30분, 오후 4시 30분~7시 30분에 길이 많이 막힙니다. 계산기는 이 시간대에 출발하는 이동을 막탄·세부 구간 1.6배, 시내 1.3배로 여유 있게 잡습니다.</p>
+    <h3>한 번 짠 일정을 저장하거나 나눌 수 있나요?</h3>
+    <p>이 페이지를 즐겨찾기에 추가해 두면 다음에도 같은 계산기를 쓸 수 있고, 마지막에 고른 일정은 이 기기에 자동으로 저장됩니다. 결과 아래의 일정 링크 복사 버튼으로 같은 일정을 일행에게 보낼 수 있습니다.</p>
+  </section>
+
+  <section class="sec notes" style="margin-top:20px">
+    <h2>꼭 알아두세요</h2>
+    <ul>
+      <li>이동시간은 교통체증이 없는 <b>평시 값</b>입니다. 오후 5~7시 출퇴근 시간에는 더 걸립니다.</li>
+      <li>영업시간(오션파크 마지막 티켓 17시, 산 페드로 요새 17시 마감, 탑스 야경 등)에 걸리면 결과에 경고가 뜹니다. 최종 순서는 영업시간을 보고 사람이 조정합니다.</li>
+      <li>예상 결제금액은 내맘대로 시티투어 요금표(11인승 밴 기준, 7인승 SUV는 10달러 할인)로 어림한 값입니다. 시티 외곽 10달러, 시라오 10달러, 1시간 추가 8곳이 반영되며 정확한 견적은 상담으로 안내드립니다.</li>
+      <li>순서는 위치상 최단 기준 추천이며, 실제 일정은 상담 후 확정됩니다. 기준일 <span id="chk"></span>.</li>
+    </ul>
+  </section>
+  <footer class="foot">투윙스 세부 자유여행 · <a href="https://cafe.naver.com/freetourincebu" target="_blank" rel="noopener">cafe.naver.com/freetourincebu</a></footer>
+</div>
+
+<script>
+var D={"checked":"2026-10-26","hubs":[{"slug":"soltana","ko":"솔타나콘도텔","lat":10.2796974,"lng":123.9720313},{"slug":"jpark","ko":"제이파크 아일랜드 리조트","lat":10.282778,"lng":123.9955854},{"slug":"airport","ko":"막탄세부국제공항","lat":10.3136169,"lng":123.9833557},{"slug":"shangrila","ko":"샹그릴라 막탄","lat":10.3081301,"lng":124.0200301},{"slug":"crimson","ko":"크림슨 리조트 막탄","lat":10.2966371,"lng":124.0140605},{"slug":"radisson","ko":"래디슨 블루 세부","lat":10.3098183,"lng":123.9194217},{"slug":"solea","ko":"솔레아 막탄 세부 리조트","lat":10.2544544,"lng":123.9601668},{"slug":"plantation","ko":"플랜테이션 베이 리조트","lat":10.2613331,"lng":123.9837444}],"places":[{"slug":"santo-nino","ko":"산토니뇨 성당","kind":"역사·종교","area":"세부시티 구도심","hours":"구글맵 표시 오후 7시 마감","lat":10.2941085,"lng":123.9021057,"close":19,"open":null,"stay":30},{"slug":"magellan-cross","ko":"마젤란 십자가","kind":"역사·종교","area":"세부시티 구도심","hours":"구글맵 표시 오후 6시 마감","lat":10.2935626,"lng":123.9019549,"close":18,"open":null,"stay":20},{"slug":"fort-san-pedro","ko":"산 페드로 요새","kind":"역사·종교","area":"세부시티 구도심","hours":"오전 8시~오후 5시(구글맵 오후 5시 마감)","lat":10.292457,"lng":123.905636,"close":17,"open":8,"stay":45},{"slug":"taoist-temple","ko":"도교 사원","kind":"역사·종교","area":"비벌리힐스(라후그)","hours":"오전 6시~오후 6시(구글맵 오후 6시 마감)","lat":10.3342483,"lng":123.8879843,"close":18,"open":6,"stay":40},{"slug":"ayala-center","ko":"아얄라 센터 세부","kind":"쇼핑","area":"세부 비즈니스 파크","hours":"구글맵 표시 오후 9시 마감","lat":10.318237,"lng":123.9052295,"close":21,"open":null,"stay":90},{"slug":"sirao-garden","ko":"시라오 가든","kind":"전망·자연","area":"북쪽 고지대(시라오)","hours":"시설 안내 오전 6시~오후 6시 30분, 구글맵은 오후 5시 30분 마감 표시 → 오후 5시 전 도착 권장","lat":10.4061578,"lng":123.8658416,"close":17,"open":6,"stay":60},{"slug":"temple-of-leah","ko":"레아 신전","kind":"전망·자연","area":"탑스·부사이(북쪽 고지대)","hours":"매일 오전 6시~오후 11시(공식 안내), 구글맵은 오후 10시 마감 표시","lat":10.3688615,"lng":123.8732535,"close":22,"open":6,"stay":45},{"slug":"tops","ko":"탑스 전망대","kind":"전망·자연","area":"탑스·부사이(북쪽 고지대)","hours":"24시간(공휴일 포함)","lat":10.3706141,"lng":123.8708714,"close":99,"open":null,"stay":40},{"slug":"il-corso","ko":"일 코르소","kind":"쇼핑","area":"사우스 로드 프로퍼티스(SRP)","hours":"구글맵 표시 오후 9시 30분 마감","lat":10.2651374,"lng":123.8770983,"close":21.5,"open":null,"stay":60},{"slug":"nustar","ko":"누스타","kind":"쇼핑·리조트","area":"사우스 로드 프로퍼티스(SRP)","hours":"리조트(24시간 운영 여부는 확인 필요)","lat":10.2721471,"lng":123.880803,"close":99,"open":null,"stay":60},{"slug":"little-kyoto","ko":"리틀 교토","kind":"전망·자연","area":"바바그·부사이(북쪽 고지대)","hours":"화~일 오전 8시~오후 8시, 월요일 휴무(2차 자료)","lat":10.3712849,"lng":123.8552821,"close":20,"open":8,"stay":40},{"slug":"la-vie-in-the-sky","ko":"라비엥 인 더 스카이","kind":"전망·식사","area":"탑스·부사이(북쪽 고지대)","hours":"구글맵 표시 새벽 1시 마감","lat":10.3726654,"lng":123.8708464,"close":25,"open":null,"stay":90},{"slug":"sm-seaside","ko":"SM 씨사이드 시티 세부","kind":"쇼핑","area":"사우스 로드(SRP)","hours":"구글맵 표시 오후 9시 마감","lat":10.2818477,"lng":123.8815795,"close":21,"open":null,"stay":90},{"slug":"sm-city","ko":"SM 시티 세부","kind":"쇼핑","area":"마볼로·북부 매립지","hours":"구글맵 표시 오후 9시 마감","lat":10.3114191,"lng":123.9178164,"close":21,"open":null,"stay":90},{"slug":"parkmall","ko":"파크몰","kind":"쇼핑","area":"만다우에","hours":"구글맵 표시 오후 9시 마감","lat":10.325712,"lng":123.9347915,"close":21,"open":null,"stay":60},{"slug":"ocean-park","ko":"세부 오션파크","kind":"테마파크","area":"사우스 로드(SM 씨사이드 맞은편)","hours":"매일 오전 10시~오후 6시(마지막 티켓 판매 오후 5시)","lat":10.2816095,"lng":123.8784684,"close":17,"open":10,"stay":240}],"keys":["soltana","jpark","airport","shangrila","crimson","radisson","solea","plantation","santo-nino","magellan-cross","fort-san-pedro","taoist-temple","ayala-center","sirao-garden","temple-of-leah","tops","il-corso","nustar","little-kyoto","la-vie-in-the-sky","sm-seaside","sm-city","parkmall","ocean-park"],"dur":[[0,297.7,350.4,727.5,679.5,1192,473.4,407,1488.9,1519.9,1465.5,1793.7,1443.4,2497,2039.7,2210.5,1523.1,1623.2,2308.6,2163.7,1425.4,1228.8,893.9,1484.9],[304.1,0,418.2,536,485.3,1418,647.7,588.3,1714.9,1745.9,1691.5,2019.7,1669.4,2723,2265.7,2436.5,1697.4,1797.5,2534.6,2389.7,1599.7,1454.8,1119.9,1659.2],[323.8,418.9,0,400.7,479.9,1211.3,769.5,703.1,1508.2,1539.2,1484.8,1732.6,1382.3,2472.6,2015.3,2186.1,1819.2,1919.3,2284.2,2139.3,1721.5,1248.1,913.2,1781],[658,501.2,356.2,0,514.1,1481.4,1040.8,981.4,1751.1,1774.4,1754.9,1957.4,1607.1,2697.4,2240.1,2410.9,2090.5,2190.6,2509,2364.1,1992.8,1518.2,1183.3,2052.3],[684,488,478.6,540.9,0,1667.9,1027.6,968.2,1948.8,1972.1,1941.4,2155.1,1804.8,2895.1,2437.8,2608.6,2077.3,2177.4,2706.7,2561.8,1979.6,1704.7,1369.8,2039.1],[1146.2,1399.3,1265.3,1535.8,1687.5,0,1591.9,1525.5,381.1,412.1,357.7,710.9,368.3,1651.7,1194.4,1365.2,764.9,865,1463.3,1318.4,667.2,73.2,408.7,726.7],[428.2,589.6,745,1022.1,971.4,1586.6,0,706.7,1883.5,1899.4,1860.1,2188.3,1838,2891.6,2434.3,2605.1,1532,1632.1,2703.2,2558.3,1434.3,1623.4,1288.5,1493.8],[412.7,581,729.5,1013.5,962.8,1571.1,764.1,0,1868,1899,1844.6,2172.8,1822.5,2876.1,2418.8,2589.6,1813.8,1913.9,2687.7,2542.8,1716.1,1607.9,1273,1775.6],[1423.7,1676.8,1514.4,1784.9,1936.6,380,1578.2,1803,0,47.5,107.6,787.9,525.8,1797.2,1339.9,1510.7,453.2,553.3,1608.8,1463.9,355.5,416.8,686.2,415],[1479.7,1691.6,1544,1814.5,1966.2,436,1564,1808.7,56,0,163.6,817.5,555.4,1826.8,1369.5,1540.3,439,539.1,1638.4,1493.5,341.3,472.8,742.2,400.8],[1394,1647.1,1519.2,1790.7,1942.4,350.3,1655.8,1773.3,124.2,155.2,0,823.3,557.8,1832.6,1375.3,1546.1,530.8,630.9,1644.2,1499.3,433.1,387.1,656.5,492.6],[1689.6,1942.7,1731.9,2002.4,2154.1,695.5,2135.3,2068.9,784.7,808,805.6,0,541.4,1503.6,1046.3,1217.1,1202.2,1302.3,1315.2,1170.3,1104.5,753.6,975.4,1164],[1359,1612.1,1401.3,1671.8,1823.5,372.4,1804.7,1738.3,543.1,566.4,557.8,607.6,0,1616.9,1159.6,1330.4,954.4,1054.5,1428.5,1283.6,856.7,430.5,644.8,916.2],[2446,2699.1,2535.2,2805.7,2957.4,1658.8,2891.7,2825.3,1806.9,1830.2,1827.8,1510.9,1563.6,0,606.2,682.4,2224.4,2324.5,429.1,635.6,2126.7,1716.9,1938.7,2186.2],[1980.4,2233.5,2069.6,2340.1,2491.8,1193.2,2426.1,2359.7,1341.3,1364.6,1362.2,1045.3,1098,599.7,0,313.2,1758.8,1858.9,376.8,266.4,1661.1,1251.3,1473.1,1720.6],[2151.5,2404.6,2240.7,2511.2,2662.9,1364.3,2597.2,2530.8,1512.4,1535.7,1533.3,1216.4,1269.1,675.4,311.7,0,1929.9,2030,487,50.5,1832.2,1422.4,1644.2,1891.7],[1132.2,1293.6,1449,1726.1,1675.4,730,1166,1410.7,452.4,448.2,481.6,1207.7,942.2,2217,1759.7,1930.5,0,141.1,2028.6,1883.7,374.9,766.8,1036.2,434.4],[1079.3,1240.7,1396.1,1673.2,1622.5,677.1,1113.1,1357.8,399.5,395.3,428.7,1154.8,889.3,2164.1,1706.8,1877.6,419.7,0,1975.7,1830.8,322,713.9,983.3,381.5],[2244.9,2498,2334.1,2604.6,2756.3,1457.7,2690.6,2624.2,1605.8,1629.1,1626.7,1309.8,1362.5,417.5,379.6,481.3,2023.3,2123.4,0,434.5,1925.6,1515.8,1737.6,1985.1],[2101,2354.1,2190.2,2460.7,2612.4,1313.8,2546.7,2480.3,1461.9,1485.2,1482.8,1165.9,1218.6,624.9,261.2,46.8,1879.4,1979.5,436.5,0,1781.7,1371.9,1593.7,1841.2],[1312.4,1473.8,1629.2,1906.3,1855.6,910.2,1346.2,1590.9,632.6,628.4,661.8,1237.3,1072.3,2315.1,1857.8,2028.6,221.2,321.3,2126.7,1981.8,0,947,1216.4,203.6],[1235.4,1488.5,1282.4,1552.9,1704.6,154.1,1681.1,1614.7,438.8,469.8,415.4,728,385.4,1668.8,1211.5,1382.3,822.6,922.7,1480.4,1335.5,724.9,0,497.9,784.4],[880,1133.1,1005.2,1276.7,1428.4,392.9,1325.7,1259.3,689.8,720.8,666.4,1006.7,656.4,1947.5,1490.2,1661,1073.6,1173.7,1759.1,1614.2,975.9,429.7,0,1035.4],[1371.1,1532.5,1687.9,1965,1914.3,947.5,1404.9,1649.6,595.4,606.2,698.2,1167.2,1002.2,2245,1787.7,1958.5,279.9,380,2056.6,1911.7,104.5,986.3,1234.3,0]],"dist":[[0,3232.1,4598.7,8655.9,7165.4,11176.3,5038.9,2980.9,13741.5,13882.2,13422.4,16062.5,13180.9,29007,20850.8,22509.2,16435.1,17591.9,24861.7,22250.4,14910.5,11335.9,8587.2,15181],[3243,0,4681,5402.2,4288.6,13827.5,6949.4,4891.3,16392.6,16533.3,16073.5,18713.7,15832,31658.1,23501.9,25160.4,18345.6,19502.4,27512.8,24901.5,16821,13987.1,11238.3,17091.5],[4480.4,4681,0,4308.2,4412.4,12346.2,9468.7,7410.7,14911.3,15052,14592.2,17924.9,15043.2,30891.1,22734.9,24393.4,20865,22021.8,26745.8,24134.5,19340.3,12505.8,9757,19610.9],[8340.3,5215.9,4110.9,0,4073.9,15619.9,11799.1,9741.1,18424.4,18565.1,17866,19916.3,17034.6,32882.5,24726.3,26384.7,23195.3,24352.1,28737.2,26125.9,21670.7,15779.5,13030.8,21941.2],[7156.5,4279.7,4403.5,4235.7,0,16498.7,10862.9,8804.9,20035.8,20176.4,18744.8,21527.6,18646,34493.9,26337.7,27996.1,22259.1,23415.9,30348.6,27737.3,20734.5,16658.3,13909.6,21005],[11049.8,13594.8,14193.6,16382.3,17807.9,0,16038.1,13980,2933.6,3074.3,2614.5,5404.1,2522.4,19106.8,10950.7,12609.1,7535.1,8691.9,14961.6,12350.3,6010.5,269.4,3038.6,6281],[4668.7,6568.3,9215.1,11615.1,10501.5,15792.7,0,6317,18357.8,17074.1,18038.8,20678.9,17797.2,33623.3,25467.1,27125.6,15014.2,16171,29478,26866.7,13489.6,15952.3,13203.5,13760.1],[2980.9,4880.5,7527.3,9927.3,8813.7,14104.9,6687.3,0,16670,16810.7,16350.9,18991.1,16109.4,31935.5,23779.3,25437.8,18083.5,19240.3,27790.2,25178.9,16558.8,14264.5,11515.7,16829.4],[13578.1,16123.2,16435.5,18624.2,20049.8,2950.6,20163.3,16508.4,0,318.8,660.9,5954,3787.1,20241.6,12085.4,13743.8,4978.2,6135,16096.3,13485,3453.6,3110.2,5566.9,3724.1],[13917.8,22984.7,16598.1,18786.8,20212.4,3290.4,19964.4,22733.5,339.7,0,1000.6,6116.6,3949.7,20404.2,12248,13906.4,4779.4,5936.2,16258.9,13647.6,3254.7,3450,5906.7,3525.3],[13224.2,15769.3,15136.3,18029.9,19455.5,2596.8,20617.7,16154.5,716.2,856.8,0,6152.8,3793.6,20440.4,12284.2,13942.6,5432.7,6589.5,16295.1,13683.8,3908,2756.3,5213.1,4178.5],[15346.7,17891.8,17702.4,19891,21316.6,5382.6,20335.1,18277,5911,6051.7,6177.3,0,3504,17603.2,9447,11105.5,10982.9,12139.7,13457.9,10846.6,9458.2,5571.3,7415.6,9728.8],[12413.3,14958.4,14768.9,16957.6,18383.2,2449.2,17401.6,15343.6,3677.5,3818.1,3736.3,3993.4,0,18281,10124.8,11783.3,8541.9,9698.7,14135.7,11524.4,7017.3,2637.8,4482.1,7287.8],[28605.3,31150.4,31840.5,34029.2,35454.8,19161.3,33593.6,31535.6,20234.4,20375,20500.6,17639,17827.4,0,9325.1,9031.9,25306.2,26463.1,5678.3,8773,23781.6,19350,21194.3,24052.1],[20405.4,22950.5,23640.6,25829.3,27254.9,10961.4,25393.7,23335.7,12034.5,12175.1,12300.7,9439.1,9627.5,9281.4,0,2783.6,17106.4,18263.2,3953.2,2524.8,15581.7,11150.1,12994.4,15852.2],[22022.9,24568,25258.2,27446.9,28872.5,12579,27011.3,24953.2,13652,13792.7,13918.3,11056.6,11245,8947.3,2742.7,0,18723.9,19880.7,4802,221.2,17199.2,12767.7,14612,17469.8],[16391.5,18291.1,20937.9,23338,22224.4,7483,15270.8,18039.9,5208.3,5049.2,5320.6,11150.8,8791.6,25438.4,17282.2,18940.7,0,1242.6,21293.1,18681.8,3960.9,7642.6,10099.3,4231.5],[15494.4,17394,20040.8,22440.9,21327.3,6585.9,14373.8,17142.8,4311.2,4152.1,4423.5,10253.7,7894.5,24541.3,16385.2,18043.6,4588.5,0,20396,17784.7,3063.8,6745.5,9202.2,3334.4],[24416.3,26961.4,27651.5,29840.2,31265.8,14972.3,29404.6,27346.6,16045.3,16186,16311.6,13450,13638.4,5634.6,3953.2,4842.9,21117.2,22274,0,4584,19592.6,15161,17005.3,19863.1],[21801.7,24346.8,25037,27225.6,28651.3,12357.8,26790.1,24732,13430.8,13571.5,13697.1,10835.4,11023.8,8726,2521.5,258.9,18502.7,19659.5,4580.8,0,16978,12546.5,14390.8,17248.6],[18581.5,20481.2,23127.9,25528,24414.4,9673,17460.9,20229.9,7398.3,7239.2,7510.7,8995.3,7765.5,24316.4,16160.2,17818.6,2275.8,3432.6,20171.1,17559.8,0,9832.6,12289.3,1208.7],[11339.8,13884.8,14257.6,16446.2,17871.9,726.4,16328.1,14270.1,3197.7,3338.3,2878.6,5468.1,2586.4,19170.8,11014.7,12673.1,7799.2,8956,15025.5,12414.2,6274.5,0,3328.6,6545.1],[8623.7,11168.8,10535.8,13429.3,14854.9,2925.9,13612,11554,5491,5631.7,5171.9,7829.4,4947.7,21532.2,13376,15034.4,10092.5,11249.3,17386.9,14775.6,8567.9,3085.4,0,8838.4],[18468.6,20368.3,23015.1,25415.1,24301.5,6981.4,17348,20117,4147.4,4181.8,4895.8,8233.2,7003.4,23554.3,15398.1,17056.6,2162.9,3319.7,19409,16797.7,612.4,6766.8,9365,0]],"extra":["tops","la-vie-in-the-sky","little-kyoto","temple-of-leah","il-corso","nustar","sm-seaside","ocean-park"],"outer":["temple-of-leah","sm-seaside"],"sirao":["sirao-garden"],"br":{"soltana|radisson":1,"soltana|santo-nino":1,"soltana|magellan-cross":1,"soltana|fort-san-pedro":1,"soltana|taoist-temple":1,"soltana|ayala-center":1,"soltana|sirao-garden":1,"soltana|temple-of-leah":1,"soltana|tops":1,"soltana|il-corso":3,"soltana|nustar":3,"soltana|little-kyoto":1,"soltana|la-vie-in-the-sky":1,"soltana|sm-seaside":3,"soltana|sm-city":1,"soltana|parkmall":1,"soltana|ocean-park":3,"jpark|radisson":1,"jpark|santo-nino":1,"jpark|magellan-cross":1,"jpark|fort-san-pedro":1,"jpark|taoist-temple":1,"jpark|ayala-center":1,"jpark|sirao-garden":1,"jpark|temple-of-leah":1,"jpark|tops":1,"jpark|il-corso":3,"jpark|nustar":3,"jpark|little-kyoto":1,"jpark|la-vie-in-the-sky":1,"jpark|sm-seaside":3,"jpark|sm-city":1,"jpark|parkmall":1,"jpark|ocean-park":3,"airport|radisson":1,"airport|santo-nino":1,"airport|magellan-cross":1,"airport|fort-san-pedro":1,"airport|taoist-temple":2,"airport|ayala-center":2,"airport|sirao-garden":2,"airport|temple-of-leah":2,"airport|tops":2,"airport|il-corso":3,"airport|nustar":3,"airport|little-kyoto":2,"airport|la-vie-in-the-sky":2,"airport|sm-seaside":3,"airport|sm-city":1,"airport|parkmall":1,"airport|ocean-park":3,"shangrila|radisson":2,"shangrila|santo-nino":2,"shangrila|magellan-cross":2,"shangrila|fort-san-pedro":2,"shangrila|taoist-temple":2,"shangrila|ayala-center":2,"shangrila|sirao-garden":2,"shangrila|temple-of-leah":2,"shangrila|tops":2,"shangrila|il-corso":3,"shangrila|nustar":3,"shangrila|little-kyoto":2,"shangrila|la-vie-in-the-sky":2,"shangrila|sm-seaside":3,"shangrila|sm-city":2,"shangrila|parkmall":2,"shangrila|ocean-park":3,"crimson|radisson":1,"crimson|santo-nino":2,"crimson|magellan-cross":2,"crimson|fort-san-pedro":1,"crimson|taoist-temple":2,"crimson|ayala-center":2,"crimson|sirao-garden":2,"crimson|temple-of-leah":2,"crimson|tops":2,"crimson|il-corso":3,"crimson|nustar":3,"crimson|little-kyoto":2,"crimson|la-vie-in-the-sky":2,"crimson|sm-seaside":3,"crimson|sm-city":1,"crimson|parkmall":1,"crimson|ocean-park":3,"solea|radisson":1,"solea|santo-nino":1,"solea|magellan-cross":3,"solea|fort-san-pedro":1,"solea|taoist-temple":1,"solea|ayala-center":1,"solea|sirao-garden":1,"solea|temple-of-leah":1,"solea|tops":1,"solea|il-corso":3,"solea|nustar":3,"solea|little-kyoto":1,"solea|la-vie-in-the-sky":1,"solea|sm-seaside":3,"solea|sm-city":1,"solea|parkmall":1,"solea|ocean-park":3,"plantation|radisson":1,"plantation|santo-nino":1,"plantation|magellan-cross":1,"plantation|fort-san-pedro":1,"plantation|taoist-temple":1,"plantation|ayala-center":1,"plantation|sirao-garden":1,"plantation|temple-of-leah":1,"plantation|tops":1,"plantation|il-corso":3,"plantation|nustar":3,"plantation|little-kyoto":1,"plantation|la-vie-in-the-sky":1,"plantation|sm-seaside":3,"plantation|sm-city":1,"plantation|parkmall":1,"plantation|ocean-park":3},"mac":["soltana","jpark","airport","shangrila","crimson","solea","plantation"],"standalone":true};
+var $=function(i){return document.getElementById(i)};
+var idx={},NAME={},P={};
+D.keys.forEach(function(k,i){idx[k]=i});
+D.hubs.forEach(function(h){NAME[h.slug]=h.ko});
+D.places.forEach(function(p){NAME[p.slug]=p.ko;P[p.slug]=p});
+$('chk').textContent=D.checked;
+
+/* 출발·도착 선택 */
+function fillSel(sel){
+  sel.innerHTML='<optgroup label="숙소·공항">'+D.hubs.map(function(x){return '<option value="'+x.slug+'">'+x.ko+'</option>'}).join('')+'</optgroup>'+
+    '<optgroup label="명소에서 시작·종료">'+D.places.map(function(x){return '<option value="'+x.slug+'">'+x.ko+'</option>'}).join('')+'</optgroup>'+
+    '<optgroup label="직접 입력"><option value="__custom">구글맵 좌표 직접 입력</option></optgroup>';
+}
+fillSel($('s'));fillSel($('e'));
+$('e').insertAdjacentHTML('afterbegin','<option value="">출발지로 돌아오기</option>');$('e').value='';
+function bindCoord(selId,boxId){
+  $(selId).addEventListener('change',function(){$(boxId).hidden=$(selId).value!=='__custom';if(!$(boxId).hidden)$(boxId+'i').focus();});
+  $(boxId+'i').addEventListener('input',function(){showCoord(boxId)});
+}
+bindCoord('s','sc');bindCoord('e','ec');
+
+function parseCoord(t){
+  t=decodeURIComponent((t||'').replace(/%(?![0-9a-f]{2})/gi,'%25')).trim();if(!t)return null;
+  var m=t.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/)||t.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/)||t.match(/[?&]q(?:uery)?=(-?\d+\.\d+)[, ]+(-?\d+\.\d+)/)||t.match(/(-?\d{1,3}\.\d+)\s*[,;\s]\s*(-?\d{1,3}\.\d+)/);
+  if(!m)return {err:/goo\.gl|maps\.app/.test(t)?'짧은 링크는 읽을 수 없습니다. 구글맵에서 장소를 길게 눌러 나오는 좌표(위도, 경도)를 붙여 넣어 주세요.':'위도, 경도 숫자를 찾지 못했습니다. 예) 10.2965, 123.9830'};
+  var la=parseFloat(m[1]),ln=parseFloat(m[2]);
+  if(la<9.8||la>11.0||ln<123.4||ln>124.3)return {err:'세부 지역 좌표가 아닙니다. 위도(10.x)와 경도(123.x)의 순서를 확인해 주세요.'};
+  return {lat:la,lng:ln};
+}
+function showCoord(boxId){
+  var r=parseCoord($(boxId+'i').value),m=$(boxId+'m');
+  m.className=r&&r.err?'err':'ok';
+  m.textContent=!r?'':r.err?r.err:'인식: 위도 '+r.lat.toFixed(5)+' · 경도 '+r.lng.toFixed(5);
+}
+function hav(a,b,c,d){var R=6371,p=Math.PI/180,x=Math.sin((c-a)*p/2),y=Math.sin((d-b)*p/2),h=x*x+Math.cos(a*p)*Math.cos(c*p)*y*y;return 2*R*Math.asin(Math.sqrt(h))}
+var MAC=D.mac;function isMac(k){return MAC.indexOf(k)>=0}
+var BRN={1:'제1 다리(올드 브릿지 · Sergio Osmeña Jr. Bridge)',2:'제2 다리(뉴 브릿지 · Marcelo Fernan Bridge)',3:'제3 다리(CCLEX · Cebu-Cordova Link Expressway)'};
+function bridgeOf(a,b){if(isMac(a.near)===isMac(b.near))return 0;var m=isMac(a.near)?a:b,c=m===a?b:a;return D.br[m.near+'|'+c.near]||0}
+function rushAt(clk){var h=(clk%1440)/60;return (h>=7&&h<9.5)||(h>=16.5&&h<19.5)}
+var HUBPOS={};D.hubs.concat(D.places).forEach(function(x){HUBPOS[x.slug]=[x.lat,x.lng]});
+/* 끝점 → 계산용 노드. 직접 입력은 가까운 저장 지점의 도로값 + 직선거리×1.4를 시속 30km로 어림 */
+function endpoint(selId,boxId){
+  var v=$(selId).value;
+  if(selId==='e'&&!v)return null;
+  if(v!=='__custom')return {near:v,ko:NAME[v],gs:0,gk:0,custom:false};
+  var r=parseCoord($(boxId+'i').value);
+  if(!r||r.err)return {error:(selId==='s'?'출발지':'도착지')+' 좌표를 확인해 주세요.'};
+  var best=null,bd=1e9,mac=r.lng>=123.955&&r.lat<10.335;
+  D.keys.forEach(function(k){if(isMac(k)!==mac)return;var d=hav(r.lat,r.lng,HUBPOS[k][0],HUBPOS[k][1]);if(d<bd){bd=d;best=k}});
+  var gk=bd*1.4;
+  return {near:best,ko:'직접 입력 좌표('+r.lat.toFixed(4)+', '+r.lng.toFixed(4)+')',gs:gk/30*3600,gk:gk,custom:true};
+}
+
+/* 명소 목록 + 곳별 체류시간 */
+var STAYS=[10,15,20,30,40,45,60,75,90,120,150,180,240];
+function stayLabel(m){return m>=60?(Math.floor(m/60)+'시간'+(m%60?' '+(m%60)+'분':'')):m+'분'}
+var kinds=[];D.places.forEach(function(p){if(kinds.indexOf(p.kind)<0)kinds.push(p.kind)});
+var html='';
+kinds.forEach(function(k){
+  html+='<div class="grp">'+k+'</div>';
+  D.places.filter(function(p){return p.kind===k}).forEach(function(p){
+    html+='<div class="pl" data-slug="'+p.slug+'"><label class="chk"><input type="checkbox" value="'+p.slug+'"><span class="nm">'+p.ko+'<small>'+p.area+'</small></span></label>'+
+      '<div class="stay" hidden><span>머무는 시간</span><select aria-label="'+p.ko+' 머무는 시간">'+STAYS.map(function(m){return '<option value="'+m+'"'+(m===p.stay?' selected':'')+'>'+stayLabel(m)+'</option>'}).join('')+'</select></div></div>';
+  });
+});
+$('pl').innerHTML=html;
+$('pl').addEventListener('change',function(ev){
+  if(ev.target.type==='checkbox')ev.target.closest('.pl').querySelector('.stay').hidden=!ev.target.checked;
+  var n=$('pl').querySelectorAll('input:checked').length;$('cnt').textContent=n?n+'곳 선택':'';
+});
+$('clr').onclick=function(){
+  [].forEach.call($('pl').querySelectorAll('input:checked'),function(c){c.checked=false;c.closest('.pl').querySelector('.stay').hidden=true});
+  $('cnt').textContent='';$('out').innerHTML='';
+};
+
+/* 경로 계산 */
+function leg(a,b,tbl){ // 노드 a,b 사이 도로값(직접 입력 끝점의 어림 구간 포함)
+  return tbl[idx[a.near]][idx[b.near]]+(tbl===D.dur?a.gs+b.gs:(a.gk+b.gk)*1000);
+}
+function total(seq,s,e){var p=[s].concat(seq,[e]),t=0;for(var i=0;i<p.length-1;i++)t+=leg(p[i],p[i+1],D.dur);return t}
+function perms(a){if(a.length<=1)return [a];var r=[];a.forEach(function(x,i){perms(a.slice(0,i).concat(a.slice(i+1))).forEach(function(q){r.push([x].concat(q))})});return r}
+function solve(items,s,e){
+  if(items.length<=8){var best=null,bt=1e18;perms(items).forEach(function(q){var t=total(q,s,e);if(t<bt){bt=t;best=q}});return best}
+  var seq=[],cur=s,left=items.slice();
+  while(left.length){var c0=cur,nx=left.reduce(function(a,b){return leg(c0,a,D.dur)<=leg(c0,b,D.dur)?a:b});seq.push(nx);left.splice(left.indexOf(nx),1);cur=nx}
+  var imp=true;
+  while(imp){imp=false;for(var i=0;i<seq.length-1;i++)for(var j=i+1;j<seq.length;j++){
+    var c=seq.slice(0,i).concat(seq.slice(i,j+1).reverse(),seq.slice(j+1));
+    if(total(c,s,e)<total(seq,s,e)-1e-9){seq=c;imp=true}}}
+  return seq;
+}
+function fmtMin(m){m=Math.round(m);var h=Math.floor(m/60),r=m%60;return h?h+'시간'+(r?' '+r+'분':''):r+'분'}
+function clock(min){min=Math.round(min);var d=Math.floor(min/1440);min=min%1440;var h=Math.floor(min/60),m=min%60;return (d?'다음날 ':'')+(h<10?'0':'')+h+':'+(m<10?'0':'')+m}
+function closeTxt(c){var h=Math.floor(c),half=c%1?' 30분':'';if(h>24)return '새벽 '+(h-24)+'시'+half;if(h>12)return '오후 '+(h-12)+'시'+half;return (h===12?'낮 12시':'오전 '+h+'시')+half}
+function msg(t){$('out').innerHTML='<div class="sec">'+t+'</div>'}
+
+$('go').onclick=function(){
+  var s=endpoint('s','sc'),e=endpoint('e','ec')||s;
+  if(s.error||e.error){msg(s.error||e.error);return}
+  var sel=[].map.call($('pl').querySelectorAll('input:checked'),function(c){
+    var row=c.closest('.pl');return {near:c.value,slug:c.value,ko:NAME[c.value],gs:0,gk:0,stay:parseInt(row.querySelector('select').value)||0};
+  }).filter(function(n){return !(s.near===n.slug&&!s.custom)&&!(e.near===n.slug&&!e.custom)});
+  if(!sel.length){msg('가고 싶은 곳을 하나 이상 골라 주세요. 출발지·도착지와 같은 곳은 제외됩니다.');return}
+  var order=solve(sel,s,e),path=[s].concat(order,[e]);
+  var t0=($('st').value||'09:00').split(':'),clk=(+t0[0])*60+(+t0[1]),startClk=clk;
+  var sec=0,km=0,stayTot=0,warns=0,approx=false,rushExtra=0,tolls=0,brLegs=[];
+  var li='<li><span class="dot">출</span><div class="name">'+s.ko+'</div><div class="tm">출발 <b>'+clock(clk)+'</b></div></li>';
+  for(var i=0;i<path.length-1;i++){
+    var a=path[i],b=path[i+1],d0=leg(a,b,D.dur),k=leg(a,b,D.dist)/1000,ap=a.custom||b.custom,br=bridgeOf(a,b),d=d0,rn='';
+    if(rushAt(clk)){d=d0*(br?1.6:1.3);rushExtra+=d-d0;rn=' · 출퇴근 시간대라 평시 '+fmtMin(d0/60)+'에서 여유를 더했습니다'}
+    if(ap)approx=true;sec+=d;km+=k;clk+=d/60;
+    if(br){brLegs.push({a:a.ko,b:b.ko,br:br});if(br===3)tolls++}
+    var lg='<div class="leg">이동 '+(ap?'약 ':'')+fmtMin(d/60)+' · '+k.toFixed(1)+'km'+(ap?' (어림값)':'')+(br?' · '+BRN[br].split('(')[0]:'')+rn+'</div>';
+    if(i===path.length-2){
+      li+='<li><span class="dot end">도</span>'+lg+'<div class="name">'+e.ko+'</div><div class="tm">도착 <b>'+clock(clk)+'</b></div></li>';
+    }else{
+      var p=P[b.slug],arr=clk,dep=arr+b.stay,w='';stayTot+=b.stay;
+      if(p.open!=null&&arr<p.open*60)w+='<div class="warn">도착이 개장 전입니다(오전 '+p.open+'시 이후 입장).</div>';
+      if(p.close!=null&&p.close<90&&dep>p.close*60){w+='<div class="warn">마감('+closeTxt(p.close)+') 전에 관람을 마치기 어렵습니다. 출발 시각이나 순서를 조정하세요.</div>';warns++}
+      if(b.slug==='little-kyoto')w+='<div class="warn">월요일은 휴무입니다.</div>';
+      li+='<li><span class="dot">'+(i+1)+'</span>'+lg+'<div class="name">'+p.ko+'</div><div class="tm">도착 <b>'+clock(arr)+'</b> → 출발 <b>'+clock(dep)+'</b> · 머무는 시간 '+stayLabel(b.stay)+'<br>'+p.hours+'</div>'+w+'</li>';
+      clk=dep;
+    }
+  }
+  var pick=function(L){return order.filter(function(v){return L.indexOf(v.slug)>=0}).map(function(v){return v.ko})};
+  var ex=pick(D.extra),ot=pick(D.outer),sr=pick(D.sirao);
+  /* 견적: 11인승 밴(내맘대로 시티투어) 기본 2시간 $30 + 추가 1시간당 $10, 시라오 +$10, 시티 외곽 +$10(1회), 1시간 추가 대상 곳당 +$10(시티 외곽 대상은 외곽 요금에 포함) */
+  var elapsed=clk-startClk,hrs=Math.max(2,Math.ceil(elapsed/60-1e-9)),base=30+(hrs-2)*10;
+  var exOnly=ex.filter(function(n){return ot.indexOf(n)<0});
+  var suv=$('veh').value==='suv',items=[['기본 요금 '+hrs+'시간(2시간 $30 + 추가 '+(hrs-2)+'시간 × $10)',base]];
+  if(sr.length)items.push(['시라오 가든',10]);
+  if(ot.length)items.push(['시티 외곽 운행('+ot.join(', ')+')',10]);
+  if(exOnly.length)items.push(['1시간 추가 대상 '+exOnly.length+'곳('+exOnly.join(', ')+') × $10',exOnly.length*10]);
+  if(suv)items.push(['7인승 SUV 선택 할인',-10]);
+  var tot=items.reduce(function(a,x){return a+x[1]},0);
+  var fee='<div class="fee"><b>요금표 확인</b>'+
+    '<table class="bill"><tbody>'+items.map(function(x){return '<tr><td>'+x[0]+'</td><td>'+(x[1]<0?'−$'+(-x[1]):'$'+x[1])+'</td></tr>'}).join('')+'</tbody><tfoot><tr><td>예상 결제금액('+(suv?'7인승 SUV':'11인승 밴')+')</td><td>$'+tot+'</td></tr></tfoot></table>'+
+    '<div class="help">기사·유류·보험·팁 포함, 입장료와 개인 경비는 별도입니다. 걸린 시간은 출발부터 도착까지 '+fmtMin(elapsed)+'로 계산했습니다.'+
+    (tolls?' CCLEX(제3 다리)를 지나는 구간 '+tolls+'회는 통행료가 별도이며 손님이 현장에서 냅니다(일반 승용차·밴 1회 107페소 기준, 총 '+(tolls*107)+'페소).':'')+
+    ' 요금은 2026년 10월 26일 기준이며 정확한 견적은 상담으로 안내드립니다.</div></div>';
+  var bridgeBox='';
+  if(brLegs.length){
+    bridgeBox='<div class="fee"><b>막탄과 세부를 오가는 길</b><ul class="br">'+brLegs.map(function(x){return '<li><span>'+x.a+' → '+x.b+'</span><em>'+BRN[x.br]+'</em></li>'}).join('')+'</ul>'+
+      '<div class="help">평시 최단 경로 기준입니다. 교통 상황이나 기사 판단에 따라 다른 다리를 이용할 수 있습니다. 제3 다리(CCLEX)는 유료도로입니다.</div></div>';
+  }else bridgeBox='<div class="fee"><b>막탄과 세부를 오가는 길</b><div class="help">이번 경로는 막탄과 세부를 오가는 구간이 없어 다리를 건너지 않습니다.</div></div>';
+  $('out').innerHTML='<section class="sec"><h2>추천 순서</h2>'+
+    '<div class="sum"><div><b>'+fmtMin(sec/60)+'</b><span>이동 시간 · '+km.toFixed(1)+'km</span></div><div><b>'+fmtMin(stayTot)+'</b><span>머무는 시간 합계</span></div><div><b>'+fmtMin(clk-startClk)+'</b><span>총 소요 · '+clock(startClk)+'→'+clock(clk)+'</span></div></div>'+
+    '<ol class="route">'+li+'</ol>'+bridgeBox+fee+
+    (warns?'<div class="warn" style="margin-top:14px">영업시간 경고 '+warns+'건. 상담 때 순서를 조정해 드립니다.</div>':'')+
+    (approx?'<div class="hint">직접 입력한 좌표 구간은 가까운 도로 기준 어림값입니다.</div>':'')+
+    (rushExtra?'<div class="hint">출퇴근 시간대(오전 7~9시 30분, 오후 4시 30분~7시 30분)에 걸리는 이동은 여유를 더해 계산했습니다(막탄·세부 구간 1.6배, 시내 1.3배).</div>':'<div class="hint">출퇴근 시간대(오전 7~9시 30분, 오후 4시 30분~7시 30분)에 걸리면 이동시간에 여유를 더해 계산합니다.</div>')+(D.standalone?'<div class="share"><button type="button" id="shb">이 일정 링크 복사</button><div id="shm"></div></div>':'')+'</section>';
+  $('out').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+/* 마지막 일정 저장·복원, 일정 링크 공유(링크 공유는 단독 페이지에서만) */
+function getState(){return {s:$('s').value,e:$('e').value,sc:$('sci').value,ec:$('eci').value,st:$('st').value,v:$('veh').value,
+  p:[].map.call($('pl').querySelectorAll('input:checked'),function(c){return [c.value,parseInt(c.closest('.pl').querySelector('select').value)||0]})}}
+function setState(o){
+  if(!o||typeof o!=='object')return;
+  if(o.s)$('s').value=o.s;if(o.e!=null)$('e').value=o.e;
+  $('sci').value=o.sc||'';$('eci').value=o.ec||'';if(o.st)$('st').value=o.st;if(o.v)$('veh').value=o.v;
+  ['s','e'].forEach(function(i){$(i).dispatchEvent(new Event('change'))});showCoord('sc');showCoord('ec');
+  [].forEach.call($('pl').querySelectorAll('input:checked'),function(c){c.checked=false;c.closest('.pl').querySelector('.stay').hidden=true});
+  (o.p||[]).forEach(function(x){var c=$('pl').querySelector('input[value="'+x[0]+'"]');if(!c)return;c.checked=true;var row=c.closest('.pl');row.querySelector('.stay').hidden=false;if(STAYS.indexOf(x[1])>=0)row.querySelector('select').value=x[1]});
+  var n=$('pl').querySelectorAll('input:checked').length;$('cnt').textContent=n?n+'곳 선택':'';
+}
+function saveState(){try{localStorage.setItem('citytour-route-v1',JSON.stringify(getState()))}catch(e){}}
+document.addEventListener('change',saveState);document.addEventListener('input',saveState);
+(function(){
+  var o=null,fromHash=false;
+  if(D.standalone&&location.hash.length>2){try{o=JSON.parse(decodeURIComponent(location.hash.slice(1)));fromHash=true}catch(e){o=null}}
+  if(!o){try{o=JSON.parse(localStorage.getItem('citytour-route-v1')||'null')}catch(e){o=null}}
+  if(o){setState(o);if(fromHash&&(o.p||[]).length)$('go').onclick()}
+})();
+document.addEventListener('click',function(ev){
+  if(ev.target.id!=='shb')return;
+  var u=location.href.split('#')[0]+'#'+encodeURIComponent(JSON.stringify(getState())),m=$('shm');
+  m.innerHTML='<input type="text" readonly id="shu" aria-label="일정 링크">';var i=$('shu');i.value=u;i.select();
+  var done=function(t){var h=document.createElement('div');h.className='ok';h.textContent=t;m.appendChild(h)};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){done('링크를 복사했습니다.')},function(){done('위 링크를 길게 눌러 복사하세요.')});else done('위 링크를 복사하세요.');
+});
+</script>
+
+</body>
+</html>
