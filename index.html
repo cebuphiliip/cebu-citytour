@@ -91,8 +91,17 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
 .faq h3{font:600 .95rem/1.5 var(--serif);margin:16px 0 4px}
 .faq h3:first-of-type{margin-top:0}
 .faq p{margin:0;color:var(--sub);font-size:.86rem}
-.foot{text-align:center;font-size:.8rem;color:var(--sub);margin-top:8px}
-.foot a{color:var(--accent)}
+.foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--brass);display:grid;gap:10px;text-align:center}
+.foot a{text-decoration:none}
+.foot .f-main{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 18px;background:var(--card);border:1px solid var(--brass);border-radius:10px;font:700 1.12rem/1.4 var(--serif);color:var(--accent);letter-spacing:.01em;transition:background .2s,color .2s}
+.foot .f-main:after{content:"→";color:var(--brass);font-weight:400;transition:transform .2s}
+.foot .f-main small{display:block;font:500 .82rem var(--sans);color:var(--sub);margin-top:2px}
+.foot .f-main:hover,.foot .f-main:focus-visible{background:var(--accent);color:var(--accent-ink)}
+.foot .f-main:hover small,.foot .f-main:focus-visible small{color:inherit}
+.foot .f-main:hover:after,.foot .f-main:focus-visible:after{color:inherit;transform:translateX(3px)}
+.foot .f-sub{font:500 .98rem/1.6 var(--serif);color:var(--ink)}
+.foot .f-sub b{font-weight:700;letter-spacing:.02em}
+.foot .f-sub a{color:var(--accent);border-bottom:1px solid var(--brass);padding-bottom:1px}
 .share{margin-top:14px}
 .share button{background:transparent;color:var(--accent);border:1px solid var(--accent);border-radius:4px;min-height:42px;padding:0 16px;font-weight:500}
 .share input{margin-top:8px;font-size:.8rem}
@@ -163,7 +172,7 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
       <li>순서는 위치상 최단 기준 추천이며, 실제 일정은 상담 후 확정됩니다. 기준일 <span id="chk"></span>.</li>
     </ul>
   </section>
-  <footer class="foot"><a href="https://cafe.naver.com/freetourincebu/1526" target="_blank" rel="noopener">세부 시티투어 명소 총정리(입장료·주차비·위치)</a><br>투윙스 세부 자유여행 · <a href="https://cafe.naver.com/freetourincebu" target="_blank" rel="noopener">cafe.naver.com/freetourincebu</a></footer>
+  <footer class="foot"><a class="f-main" href="https://cafe.naver.com/freetourincebu/1526" target="_blank" rel="noopener"><span>세부 시티투어 명소 총정리<small>입장료 · 주차비 · 위치</small></span></a><div class="f-sub"><b>투윙스 세부 자유여행</b> · <a href="https://cafe.naver.com/freetourincebu" target="_blank" rel="noopener">cafe.naver.com/freetourincebu</a></div></footer>
 </div>
 
 <script>
