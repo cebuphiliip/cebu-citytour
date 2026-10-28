@@ -12,6 +12,10 @@
 <link rel="canonical" href="https://cebuphiliip.github.io/cebu-citytour/">
 <meta property="og:url" content="https://cebuphiliip.github.io/cebu-citytour/">
 <meta name="google-site-verification" content="9FOP7gQNRIC9I4aNo5OlxacvS2b-UFwjASxpvlzFtco" />
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="세부 시티투어">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "세부 시티투어 순서·시간 계산기", "description": "세부 시티투어 출발지·도착지와 가고 싶은 곳을 고르면 가장 짧은 방문 순서, 시간대별 일정, 막탄↔세부 다리(제1·2·3), 예상 차량 요금을 계산해 주는 무료 계산기. 투윙스 세부 자유여행.", "applicationCategory": "TravelApplication", "operatingSystem": "Any", "inLanguage": "ko", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}, "publisher": {"@type": "Organization", "name": "투윙스 세부 자유여행", "url": "https://cafe.naver.com/freetourincebu"}}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>세부 시티투어 순서·시간 계산기 | 투윙스 세부 자유여행</title>
@@ -91,6 +95,14 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
 .faq h3{font:600 .95rem/1.5 var(--serif);margin:16px 0 4px}
 .faq h3:first-of-type{margin-top:0}
 .faq p{margin:0;color:var(--sub);font-size:.86rem}
+.a2hs{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:9px 18px;border:1px solid var(--brass);border-radius:999px;background:transparent;color:var(--accent);font:600 .92rem var(--sans);letter-spacing:.02em;cursor:pointer;transition:background .2s,color .2s}
+.a2hs:hover,.a2hs:focus-visible{background:var(--accent);color:var(--accent-ink)}
+.a2hs svg{width:18px;height:18px;flex:none}
+.a2hs[hidden],.a2guide[hidden]{display:none}
+.a2top{margin-top:16px}
+.a2foot{justify-self:center;padding:12px 26px;font-size:1rem}
+.a2guide{margin-top:12px;padding:14px 16px;background:var(--soft);border:1px solid var(--line);border-left:3px solid var(--brass);border-radius:4px;text-align:left;font-size:.88rem;line-height:1.7;color:var(--ink)}
+.a2guide b{font-family:var(--serif)}
 .foot{margin-top:20px;padding-top:18px;border-top:1px solid var(--brass);display:grid;gap:10px;text-align:center}
 .foot a{text-decoration:none}
 .foot .f-main{display:flex;align-items:center;justify-content:center;gap:10px;padding:16px 18px;background:var(--card);border:1px solid var(--brass);border-radius:10px;font:700 1.12rem/1.4 var(--serif);color:var(--accent);letter-spacing:.01em;transition:background .2s,color .2s}
@@ -118,6 +130,8 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
     <div class="eyebrow">Cebu City Tour Planner</div>
     <h1>세부 시티투어 순서·시간 계산기</h1>
     <p class="lead">출발지와 도착지, 가고 싶은 곳, 곳마다 머물 시간을 정하면 이동이 가장 짧은 순서와 시간대별 일정을 계산합니다.</p>
+    <button type="button" class="a2hs a2top" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 8v7M8.5 11.5 12 15l3.5-3.5"/></svg>바탕화면에 추가</button>
+    <div class="a2guide" hidden></div>
   </header>
 
   <section class="sec">
@@ -172,7 +186,7 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
       <li>순서는 위치상 최단 기준 추천이며, 실제 일정은 상담 후 확정됩니다. 기준일 <span id="chk"></span>.</li>
     </ul>
   </section>
-  <footer class="foot"><a class="f-main" href="https://cafe.naver.com/freetourincebu/1526" target="_blank" rel="noopener"><span>세부 시티투어 명소 총정리<small>입장료 · 주차비 · 위치</small></span></a><div class="f-sub"><b>투윙스 세부 자유여행</b> · <a href="https://cafe.naver.com/freetourincebu" target="_blank" rel="noopener">cafe.naver.com/freetourincebu</a></div></footer>
+  <footer class="foot"><a class="f-main" href="https://cafe.naver.com/freetourincebu/1526" target="_blank" rel="noopener"><span>세부 시티투어 명소 총정리<small>입장료 · 주차비 · 위치</small></span></a><div class="f-sub"><b>투윙스 세부 자유여행</b> · <a href="https://cafe.naver.com/freetourincebu" target="_blank" rel="noopener">cafe.naver.com/freetourincebu</a></div><div><button type="button" class="a2hs a2foot" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 8v7M8.5 11.5 12 15l3.5-3.5"/></svg>바탕화면에 추가</button><div class="a2guide" hidden></div></div></footer>
 </div>
 
 <script>
@@ -376,6 +390,24 @@ document.addEventListener('click',function(ev){
   var done=function(t){var h=document.createElement('div');h.className='ok';h.textContent=t;m.appendChild(h)};
   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(u).then(function(){done('링크를 복사했습니다.')},function(){done('위 링크를 길게 눌러 복사하세요.')});else done('위 링크를 복사하세요.');
 });
+(function(){
+  if(!D.standalone)return;
+  var inst=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
+  if(inst)return;
+  var btns=document.querySelectorAll('.a2hs'),guides=document.querySelectorAll('.a2guide'),dp=null;
+  btns.forEach(function(b){b.hidden=false});
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e});
+  window.addEventListener('appinstalled',function(){btns.forEach(function(b){b.hidden=true});guides.forEach(function(g){g.hidden=true})});
+  var ua=navigator.userAgent,ios=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),and=/Android/.test(ua);
+  var msg=ios?'<b>아이폰·아이패드</b> — Safari 하단의 <b>공유 버튼(□↑)</b>을 누르고 <b>‘홈 화면에 추가’</b>를 선택하세요.<br>(카카오톡·네이버 앱 안에서 열었다면 우측 메뉴의 ‘Safari로 열기’ 후 진행)'
+   :and?'<b>안드로이드</b> — Chrome 우측 상단 <b>⋮ 메뉴</b>에서 <b>‘홈 화면에 추가’</b> 또는 <b>‘앱 설치’</b>를 선택하세요.<br>(카카오톡·네이버 앱 안에서 열었다면 ‘다른 브라우저로 열기’ 후 진행)'
+   :'<b>PC</b> — Chrome·Edge 주소창 오른쪽의 <b>설치 아이콘(⊕)</b>을 누르거나, 브라우저 메뉴에서 <b>‘앱 설치’ / ‘바로가기 만들기’</b>를 선택하세요.';
+  btns.forEach(function(b,i){b.onclick=function(){
+    if(dp){dp.prompt();dp.userChoice.then(function(){dp=null});return}
+    var g=guides[i];g.innerHTML=msg;g.hidden=!g.hidden;
+  }});
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
+})();
 </script>
 
 </body>
