@@ -17,6 +17,7 @@
 <link rel="icon" href="favicon-32.png" sizes="32x32">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="세부 시티투어">
+<script src="install.js" defer data-key="citytour" data-name="세부 시티투어" data-icon="icon-192.png" data-color="#0d5c63" data-who="guest"></script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "세부 시티투어 순서·시간 계산기", "description": "세부 시티투어 출발지·도착지와 가고 싶은 곳을 고르면 가장 짧은 방문 순서, 시간대별 일정, 막탄↔세부 다리(제1·2·3), 예상 차량 요금을 계산해 주는 무료 계산기. 투윙스 세부 자유여행.", "applicationCategory": "TravelApplication", "operatingSystem": "Any", "inLanguage": "ko", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "KRW"}, "publisher": {"@type": "Organization", "name": "투윙스 세부 자유여행", "url": "https://cafe.naver.com/freetourincebu"}}</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>세부 시티투어 순서·시간 계산기 | 투윙스 세부 자유여행</title>
@@ -402,16 +403,16 @@ document.addEventListener('click',function(ev){
   if(!D.standalone)return;
   var inst=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
   if(inst)return;
-  var btns=document.querySelectorAll('.a2hs'),guides=document.querySelectorAll('.a2guide'),dp=null;
+  var btns=document.querySelectorAll('.a2hs'),guides=document.querySelectorAll('.a2guide');
   btns.forEach(function(b){b.hidden=false});
-  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();dp=e});
+  /* 설치 창·아이폰/카톡 안내는 공용 install.js(PhilInstall)가 맡는다 — 원장 261120-01 */
   window.addEventListener('appinstalled',function(){btns.forEach(function(b){b.hidden=true});guides.forEach(function(g){g.hidden=true})});
   var ua=navigator.userAgent,ios=/iPad|iPhone|iPod/.test(ua)||(/Macintosh/.test(ua)&&navigator.maxTouchPoints>1),and=/Android/.test(ua);
   var msg=ios?'<b>아이폰·아이패드</b> — Safari 하단의 <b>공유 버튼(□↑)</b>을 누르고 <b>‘홈 화면에 추가’</b>를 선택하세요.<br>(카카오톡·네이버 앱 안에서 열었다면 우측 메뉴의 ‘Safari로 열기’ 후 진행)'
    :and?'<b>안드로이드</b> — Chrome 우측 상단 <b>⋮ 메뉴</b>에서 <b>‘홈 화면에 추가’</b> 또는 <b>‘앱 설치’</b>를 선택하세요.<br>(카카오톡·네이버 앱 안에서 열었다면 ‘다른 브라우저로 열기’ 후 진행)'
    :'<b>PC</b> — Chrome·Edge 주소창 오른쪽의 <b>설치 아이콘(⊕)</b>을 누르거나, 브라우저 메뉴에서 <b>‘앱 설치’ / ‘바로가기 만들기’</b>를 선택하세요.';
   btns.forEach(function(b,i){b.onclick=function(){
-    if(dp){dp.prompt();dp.userChoice.then(function(){dp=null});return}
+    if(window.PhilInstall&&PhilInstall.open())return;
     var g=guides[i];g.innerHTML=msg;g.hidden=!g.hidden;
   }});
   if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(function(){});
