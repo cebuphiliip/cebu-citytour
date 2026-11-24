@@ -137,6 +137,28 @@ ul.br li em{font-style:normal;color:var(--accent);font-size:.82rem}
 .pt td small{display:block;color:var(--sub);font-size:.74rem}
 details.more summary{cursor:pointer;font:600 1rem var(--serif);color:var(--accent);min-height:44px;display:flex;align-items:center}
 @media (max-width:560px){.sum b{font-size:1rem}}
+/* 예시 코스(2026-11-25, 원장 261125-07) — 누르면 계산기에 그대로 넣고 바로 계산 */
+.ex .lead2{font-size:.86rem;color:var(--sub);margin:-6px 0 14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.chips button{min-height:36px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--soft);color:var(--ink);font:500 .82rem var(--sans)}
+.chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.chips .lb{align-self:center;font-size:.72rem;color:var(--sub);letter-spacing:.06em;margin-right:2px}
+ul.exl{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:8px}
+.exi[hidden]{display:none}
+.exb{display:flex;align-items:stretch;gap:14px;width:100%;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:6px;background:var(--card);color:var(--ink);transition:border-color .15s,background .15s}
+.exb:hover{border-color:var(--accent)}
+.exb[aria-pressed="true"]{border-color:var(--accent);background:var(--soft);box-shadow:inset 3px 0 0 var(--accent)}
+.ex-p{flex:none;width:58px;display:flex;flex-direction:column;justify-content:center;align-items:center;border-right:1px solid var(--line);padding-right:12px}
+.ex-p b{font:700 1.2rem var(--serif);color:var(--accent);font-variant-numeric:tabular-nums}
+.ex-p small{font-size:.72rem;color:var(--sub)}
+.ex-b{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.ex-t{font:600 .98rem/1.4 var(--serif)}
+.ex-r{font-size:.8rem;line-height:1.5;color:var(--ink)}
+.ex-m{font-size:.74rem;color:var(--sub);font-variant-numeric:tabular-nums}
+.ex-n{font-size:.76rem;color:var(--sub);line-height:1.5}
+.exmore{width:100%;margin-top:8px;min-height:44px;border:1px dashed var(--accent);border-radius:6px;background:transparent;color:var(--accent);font:600 .9rem var(--sans)}
+.exmore[hidden]{display:none}
+.ex-hint{margin:0 0 14px;padding:8px 12px;border-left:3px solid var(--brass);background:var(--soft);color:var(--ink)}
 .notes{font-size:.82rem;color:var(--sub)}
 .notes h2{color:var(--ink)}
 .notes ul{margin:0;padding-left:18px}
@@ -153,8 +175,33 @@ details.more summary{cursor:pointer;font:600 1rem var(--serif);color:var(--accen
     <button type="button" class="a2hs a2top" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M12 8v7M8.5 11.5 12 15l3.5-3.5"/></svg>바탕화면에 추가</button>
     <div class="a2guide" hidden></div>
   </header>
+  <section class="sec ex" id="ex">
+    <h2><span class="n">예시 코스</span>누르면 바로 계산</h2>
+    <p class="lead2">상황이나 예산에 맞는 코스를 누르면 아래 계산기에 그대로 들어가 순서·시각·요금이 바로 펼쳐집니다. 거기서 장소를 더하거나 빼면 내 일정이 됩니다.</p>
+    <div class="chips" role="group" aria-label="상황별로 보기"><span class="lb">상황</span><button type="button" data-fs="all" aria-pressed="true">전체</button><button type="button" data-fs="day" aria-pressed="false">하루 코스</button><button type="button" data-fs="first" aria-pressed="false">처음 세부·구도심</button><button type="button" data-fs="view" aria-pressed="false">전망·노을·야경</button><button type="button" data-fs="kids" aria-pressed="false">아이와 함께</button><button type="button" data-fs="depart" aria-pressed="false">출국일(막날)</button><button type="button" data-fs="night" aria-pressed="false">저녁 출발</button></div>
+    <div class="chips" role="group" aria-label="금액별로 보기"><span class="lb">금액</span><button type="button" data-fp="all" aria-pressed="true">전체</button><button type="button" data-fp="lo" aria-pressed="false">$50 이하</button><button type="button" data-fp="mid" aria-pressed="false">$60~80</button><button type="button" data-fp="hi" aria-pressed="false">$90 이상</button></div>
+    <ul class="exl">
+    <li class="exi" data-tags="day view" data-price="90"><button type="button" class="exb" aria-pressed="false" data-title="하루 시티투어 대표 코스" data-q="s=jpark&amp;e=&amp;t=1100&amp;v=van&amp;p=santo-nino,magellan-cross,ayala-center:60,sirao-garden,temple-of-leah"><span class="ex-p"><b>$90</b><small>6시간</small></span><span class="ex-b"><span class="ex-t">하루 시티투어 대표 코스</span><span class="ex-r">시라오 가든 → 레아 신전 → 아얄라 센터 세부 → 산토니뇨 성당 → 마젤란 십자가</span><span class="ex-m">제이파크 아일랜드 리조트 11:00 출발 → 16:49 복귀 · 총 5시간 49분</span><span class="ex-n">투윙스 카톡 채널 안내에 실린 대표 예시예요. 산 위 시라오 가든·레아 신전과 구도심, 아얄라 점심까지.</span></span></button></li>
+    <li class="exi" data-tags="depart day" data-price="90"><button type="button" class="exb" aria-pressed="false" data-title="출국일 막날팩 8시간" data-q="s=jpark&amp;e=raum&amp;t=1200&amp;v=van&amp;p=fort-san-pedro,santo-nino,magellan-cross,taoist-temple,ayala-center:180"><span class="ex-p"><b>$90</b><small>8시간</small></span><span class="ex-b"><span class="ex-t">출국일 막날팩 8시간</span><span class="ex-r">산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가 → 도교 사원 → 아얄라 센터 세부</span><span class="ex-m">제이파크 아일랜드 리조트 12:00 출발 → 라움스파 19:13 도착 · 총 7시간 13분</span><span class="ex-n">체크아웃한 짐은 밴에 싣고 구도심·도교 사원·아얄라를 돈 뒤 라움스파로. 금액은 라움스파 도착까지 차량 요금이고, 마사지와 공항 이동은 상담 때 함께 안내드려요.</span></span></button></li>
+    <li class="exi" data-tags="first" data-price="40"><button type="button" class="exb" aria-pressed="false" data-title="구도심 역사 반나절" data-q="s=jpark&amp;e=jpark&amp;t=1300&amp;v=van&amp;p=fort-san-pedro,santo-nino,magellan-cross"><span class="ex-p"><b>$40</b><small>3시간</small></span><span class="ex-b"><span class="ex-t">구도심 역사 반나절</span><span class="ex-r">산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가</span><span class="ex-m">제이파크 아일랜드 리조트 13:00 출발 → 15:46 복귀 · 총 2시간 46분</span><span class="ex-n">가장 가벼운 시티 코스예요. 산토니뇨 성당은 복장 규칙이 있어요.</span></span></button></li>
+    <li class="exi" data-tags="view night" data-price="70"><button type="button" class="exb" aria-pressed="false" data-title="탑스 노을·야경" data-q="s=shangrila&amp;e=shangrila&amp;t=1600&amp;v=van&amp;p=tops:120"><span class="ex-p"><b>$70</b><small>5시간</small></span><span class="ex-b"><span class="ex-t">탑스 노을·야경</span><span class="ex-r">탑스 전망대</span><span class="ex-m">샹그릴라 막탄 16:00 출발 → 20:09 복귀 · 총 4시간 9분</span><span class="ex-n">해 질 무렵 탑스 전망대에서 2시간. 탑스는 다녀오신 손님들 만족도가 좋은 곳이에요.</span></span></button></li>
+    <li class="exi" data-tags="kids day" data-price="80"><button type="button" class="exb" aria-pressed="false" data-title="아이와 오션파크 + SM 씨사이드" data-q="s=jpark&amp;e=jpark&amp;t=0930&amp;v=van&amp;p=ocean-park,sm-seaside"><span class="ex-p"><b>$80</b><small>7시간</small></span><span class="ex-b"><span class="ex-t">아이와 오션파크 + SM 씨사이드</span><span class="ex-r">세부 오션파크 → SM 씨사이드 시티 세부</span><span class="ex-m">제이파크 아일랜드 리조트 09:30 출발 → 16:05 복귀 · 총 6시간 35분</span><span class="ex-n">세부 오션파크 4시간 뒤 SM 씨사이드에서 쇼핑·식사. 모두 세부시티 안이라 추가 요금이 없어요. 입장료는 따로예요.</span></span></button></li>
+    <li class="exi" data-tags="depart" data-price="70"><button type="button" class="exb" aria-pressed="false" data-title="출국일 막날팩 6시간" data-q="s=jpark&amp;e=raum&amp;t=1200&amp;v=van&amp;p=fort-san-pedro,santo-nino,magellan-cross,ayala-center:150"><span class="ex-p"><b>$70</b><small>6시간</small></span><span class="ex-b"><span class="ex-t">출국일 막날팩 6시간</span><span class="ex-r">산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가 → 아얄라 센터 세부</span><span class="ex-m">제이파크 아일랜드 리조트 12:00 출발 → 라움스파 17:46 도착 · 총 5시간 46분</span><span class="ex-n">8시간판에서 도교 사원을 빼고 짧게. 금액은 라움스파 도착까지 차량 요금이에요.</span></span></button></li>
+    <li class="exi" data-tags="first" data-price="60"><button type="button" class="exb" aria-pressed="false" data-title="구도심 + SM 씨사이드 쇼핑" data-q="s=shangrila&amp;e=shangrila&amp;t=0930&amp;v=van&amp;p=santo-nino,magellan-cross,fort-san-pedro,sm-seaside"><span class="ex-p"><b>$60</b><small>5시간</small></span><span class="ex-b"><span class="ex-t">구도심 + SM 씨사이드 쇼핑</span><span class="ex-r">산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가 → SM 씨사이드 시티 세부</span><span class="ex-m">샹그릴라 막탄 09:30 출발 → 13:58 복귀 · 총 4시간 28분</span><span class="ex-n">구도심 세 곳을 보고 SM 씨사이드에서 점심·쇼핑. 추가 요금 없는 지역만 다녀요.</span></span></button></li>
+    <li class="exi" data-tags="first view day" data-price="80"><button type="button" class="exb" aria-pressed="false" data-title="구도심 + SM 씨사이드 + 탑스" data-q="s=shangrila&amp;e=shangrila&amp;t=0930&amp;v=van&amp;p=tops,santo-nino,magellan-cross,fort-san-pedro,sm-seaside"><span class="ex-p"><b>$80</b><small>6시간</small></span><span class="ex-b"><span class="ex-t">구도심 + SM 씨사이드 + 탑스</span><span class="ex-r">탑스 전망대 → 산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가 → SM 씨사이드 시티 세부</span><span class="ex-m">샹그릴라 막탄 09:30 출발 → 15:22 복귀 · 총 5시간 52분</span><span class="ex-n">바로 위 코스에 탑스 전망대를 더하면 산 위 10달러가 붙고 다녀오는 시간만큼 이용 시간도 늘어요.</span></span></button></li>
+    <li class="exi" data-tags="view" data-price="70"><button type="button" class="exb" aria-pressed="false" data-title="탑스 + 레아 신전 노을" data-q="s=jpark&amp;e=jpark&amp;t=1500&amp;v=van&amp;p=tops:90,temple-of-leah"><span class="ex-p"><b>$70</b><small>5시간</small></span><span class="ex-b"><span class="ex-t">탑스 + 레아 신전 노을</span><span class="ex-r">탑스 전망대 → 레아 신전</span><span class="ex-m">제이파크 아일랜드 리조트 15:00 출발 → 19:23 복귀 · 총 4시간 23분</span><span class="ex-n">산 위 두 곳을 가도 산 위 요금은 한 번(10달러)이에요.</span></span></button></li>
+    <li class="exi" data-tags="view night" data-price="70"><button type="button" class="exb" aria-pressed="false" data-title="탑스 야경 + 라비엥 전망 저녁" data-q="s=jpark&amp;e=jpark&amp;t=1600&amp;v=van&amp;p=tops:90,la-vie-in-the-sky:90"><span class="ex-p"><b>$70</b><small>5시간</small></span><span class="ex-b"><span class="ex-t">탑스 야경 + 라비엥 전망 저녁</span><span class="ex-r">탑스 전망대 → 라비엥 인 더 스카이</span><span class="ex-m">제이파크 아일랜드 리조트 16:00 출발 → 20:37 복귀 · 총 4시간 37분</span><span class="ex-n">탑스 야경 뒤 라비엥 인 더 스카이에서 전망 저녁. 식사비는 따로예요.</span></span></button></li>
+    <li class="exi" data-tags="view day" data-price="90"><button type="button" class="exb" aria-pressed="false" data-title="북쪽 산 위 풀코스" data-q="s=jpark&amp;e=jpark&amp;t=1200&amp;v=van&amp;p=sirao-garden,tops:90,temple-of-leah"><span class="ex-p"><b>$90</b><small>6시간</small></span><span class="ex-b"><span class="ex-t">북쪽 산 위 풀코스</span><span class="ex-r">시라오 가든 → 탑스 전망대 → 레아 신전</span><span class="ex-m">제이파크 아일랜드 리조트 12:00 출발 → 17:14 복귀 · 총 5시간 14분</span><span class="ex-n">시라오 가든·탑스·레아 신전 산 위 세 곳을 한 번에. 산 위 10달러에 시라오 10달러가 더 붙어요.</span></span></button></li>
+    <li class="exi" data-tags="view" data-price="70"><button type="button" class="exb" aria-pressed="false" data-title="시라오 가든만 다녀오기" data-q="s=jpark&amp;e=jpark&amp;t=0900&amp;v=van&amp;p=sirao-garden"><span class="ex-p"><b>$70</b><small>4시간</small></span><span class="ex-b"><span class="ex-t">시라오 가든만 다녀오기</span><span class="ex-r">시라오 가든</span><span class="ex-m">제이파크 아일랜드 리조트 09:00 출발 → 12:21 복귀 · 총 3시간 21분</span><span class="ex-n">꽃 정원 사진 코스. 시라오만 가도 산 위 10달러 + 시라오 10달러가 붙어요.</span></span></button></li>
+    <li class="exi" data-tags="night" data-price="50"><button type="button" class="exb" aria-pressed="false" data-title="숙보 메르카도 야시장 저녁" data-q="s=jpark&amp;e=jpark&amp;t=1700&amp;v=van&amp;p=sugbo-mercado:90"><span class="ex-p"><b>$50</b><small>4시간</small></span><span class="ex-b"><span class="ex-t">숙보 메르카도 야시장 저녁</span><span class="ex-r">숙보 메르카도 야시장</span><span class="ex-m">제이파크 아일랜드 리조트 17:00 출발 → 20:17 복귀 · 총 3시간 17분</span><span class="ex-n">IT파크 야시장에서 저녁. 월요일은 쉬어요.</span></span></button></li>
+    <li class="exi" data-tags="depart view" data-price="110"><button type="button" class="exb" aria-pressed="false" data-title="출국일 막날팩 8시간 + 탑스" data-q="s=jpark&amp;e=raum&amp;t=1200&amp;v=van&amp;p=fort-san-pedro,santo-nino,magellan-cross,taoist-temple,ayala-center:180,tops"><span class="ex-p"><b>$110</b><small>9시간</small></span><span class="ex-b"><span class="ex-t">출국일 막날팩 8시간 + 탑스</span><span class="ex-r">산 페드로 요새 → 산토니뇨 성당 → 마젤란 십자가 → 탑스 전망대 → 도교 사원 → 아얄라 센터 세부</span><span class="ex-m">제이파크 아일랜드 리조트 12:00 출발 → 라움스파 20:11 도착 · 총 8시간 11분</span><span class="ex-n">막날팩 8시간판에 탑스를 더하면 산 위 10달러가 붙고 이용 시간도 9시간으로 늘어요.</span></span></button></li>
+    </ul>
+    <button type="button" class="exmore" id="exmore" hidden></button>
+    <p class="help" id="exnone" hidden>이 조건에 맞는 예시가 없어요. 다른 칸을 눌러 보세요.</p>
+    <p class="help">금액은 11인승 밴 기준 예상 결제금액입니다(7인승 SUV는 5달러 적음). 이 계산기로 계산한 값이고, 입장료·톨비·주차비·식사는 별도입니다. 요금 기준 2026-11-18, 정확한 견적은 상담으로 안내드립니다.</p>
+  </section>
 
-  <section class="sec">
+  <section class="sec" id="step1">
     <h2><span class="n">STEP 1</span>출발지와 도착지</h2>
     <div class="row">
       <div class="fld">
@@ -305,8 +352,10 @@ $('pl').addEventListener('change',function(ev){
 });
 $('clr').onclick=function(){
   [].forEach.call($('pl').querySelectorAll('input:checked'),function(c){c.checked=false;c.closest('.pl').querySelector('.stay').hidden=true});
-  $('cnt').textContent='';$('out').innerHTML='';LAST=null;setNote('');saveState(); /* 저장값도 비워야 새로고침 때 되살아나지 않는다(CT-10) */
+  $('cnt').textContent='';$('out').innerHTML='';LAST=null;setNote('');clearEx();saveState(); /* 저장값도 비워야 새로고침 때 되살아나지 않는다(CT-10) */
 };
+/* 예시 코스 표시 지우기 — 손님이 직접 바꾸면 더는 '예시'가 아니다 */
+function clearEx(){EXT='';[].forEach.call(document.querySelectorAll('.exb[aria-pressed="true"]'),function(x){x.setAttribute('aria-pressed','false')})}
 
 /* 경로 계산 */
 var TRAVEL_PAD=1.2; // 도로 최단값은 실제보다 짧아 이동시간을 전체 20% 늘려 잡는다
@@ -338,7 +387,7 @@ function clock(min){min=Math.round(min);var d=Math.floor(min/1440);min=min%1440;
 function closeTxt(c){var h=Math.floor(c),half=c%1?' 30분':'';if(h===24&&!half)return '자정';if(h>24)return '새벽 '+(h-24)+'시'+half;if(h>12)return '오후 '+(h-12)+'시'+half;return (h===12?'낮 12시':'오전 '+h+'시')+half}
 function msg(t){$('out').innerHTML='<div class="sec">'+t+'</div>'}
 
-var LAST=null,NOTE='',KAKAO='http://pf.kakao.com/_xfhWdG/chat';
+var LAST=null,NOTE='',EXT='',KAKAO='http://pf.kakao.com/_xfhWdG/chat';
 function setNote(h){NOTE=h||'';$('lnk').innerHTML=NOTE;$('lnk').hidden=!NOTE}
 $('go').onclick=function(){
   var s=endpoint('s','sc'),e=endpoint('e','ec')||s;
@@ -402,6 +451,7 @@ $('go').onclick=function(){
   var endUp=!e.custom&&e!==s&&D.mountain.indexOf(e.near)>=0;
   LAST={s:s.ko,e:e.ko,st:clock(startClk),en:clock(clk),dur:fmtMin(elapsed),veh:vname,stops:stops,items:items,tot:tot,out:out.length>0};
   $('out').innerHTML='<section class="sec"><h2>추천 순서</h2>'+(NOTE?'<div class="warn out-note">'+NOTE+'</div>':'')+
+    (EXT?'<div class="hint ex-hint">예시 코스 <b>‘'+esc(EXT)+'’</b>를 불러왔습니다. 위 STEP 1~3에서 장소·머무는 시간·출발 시각을 바꿔 다시 계산하면 내 일정이 됩니다.</div>':'')+
     (out.length?'<div class="warn out-note">'+out.join('·')+' 좌표가 막탄·만다우에·세부시티 밖입니다. 그 외 지역은 요금을 따로 안내드려요(별도 문의).</div>':'')+
     '<div class="sum"><div><b>'+fmtMin(sec/60)+'</b><span>이동 시간 · '+km.toFixed(1)+'km</span></div><div><b>'+fmtMin(stayTot)+'</b><span>머무는 시간 합계</span></div><div><b>'+fmtMin(elapsed)+'</b><span>총 소요 · '+clock(startClk)+'→'+clock(clk)+'</span></div></div>'+
     '<ol class="route">'+li+'</ol>'+bridgeBox+fee+
@@ -486,7 +536,37 @@ function decodeShare(h){
   }catch(e){return null}
 }
 function saveState(){try{localStorage.setItem('citytour-route-v1',JSON.stringify(getState()))}catch(e){}}
-document.addEventListener('change',function(ev){saveState();if(ev.isTrusted&&NOTE)setNote('')});document.addEventListener('input',saveState);
+document.addEventListener('change',function(ev){saveState();if(ev.isTrusted){if(NOTE)setNote('');clearEx()}});document.addEventListener('input',saveState);
+/* 예시 코스(2026-11-25 사장님, 원장 261125-07): 상황·금액 칸으로 거르고, 누르면 계산기에 그대로 넣어 바로 계산한다.
+   카드의 금액·시각은 citytour_examples.py 가 이 계산 코드로 미리 계산해 넣은 값 — 누르면 같은 값이 나온다. */
+(function(){
+  var box=$('ex');if(!box)return;
+  var fs='all',fp='all',FIRST=6;
+  function press(sel,b){[].forEach.call(box.querySelectorAll(sel),function(x){x.setAttribute('aria-pressed',x===b?'true':'false')})}
+  function apply(){
+    var shown=0,fold=fs==='all'&&fp==='all'&&!box.classList.contains('open'),more=$('exmore');
+    [].forEach.call(box.querySelectorAll('.exi'),function(li){
+      var tg=(li.getAttribute('data-tags')||'').split(' '),pr=+li.getAttribute('data-price');
+      var ok=(fs==='all'||tg.indexOf(fs)>=0)&&(fp==='all'||(fp==='lo'?pr<=50:fp==='mid'?(pr>50&&pr<90):pr>=90));
+      if(ok)shown++;li.hidden=!ok||(fold&&shown>FIRST);
+    });
+    more.hidden=!(fold&&shown>FIRST);more.textContent='예시 '+(shown-FIRST)+'개 더 보기';
+    $('exnone').hidden=shown>0;
+  }
+  box.addEventListener('click',function(ev){
+    var t=ev.target.closest('button');if(!t)return;
+    if(t.hasAttribute('data-fs')){fs=t.getAttribute('data-fs');press('[data-fs]',t);apply();return}
+    if(t.hasAttribute('data-fp')){fp=t.getAttribute('data-fp');press('[data-fp]',t);apply();return}
+    if(t.id==='exmore'){box.classList.add('open');apply();return}
+    if(!t.classList.contains('exb'))return;
+    var o=decodeShare(t.getAttribute('data-q'));if(!o)return;
+    setNote('');var miss=setState(o),all=miss.end.concat(miss.other);saveState();
+    if(all.length)setNote('예시 코스에 지금 계산기에 없는 값이 있어 바꿨습니다 — '+all.map(esc).join(', ')+'.');
+    EXT=t.getAttribute('data-title');press('.exb',t);
+    $('go').onclick();
+  });
+  apply();
+})();
 (function(){
   var o=null,fromHash=false;
   if(D.standalone&&location.hash.length>2){o=decodeShare(location.hash.slice(1));fromHash=!!o}
