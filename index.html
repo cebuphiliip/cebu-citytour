@@ -480,12 +480,14 @@ function resultText(kind){
   var R=LAST;if(!R)return '';
   var route=R.stops.map(function(x){return x.ko}).join(' → '),link=shareLink();
   var money=R.out?'별도 문의(막탄·만다우에·세부시티 밖)':'$'+R.tot+' ('+R.items.map(function(x){return x[2]}).join(' + ')+')';
-  if(kind==='form')return (R.ex?['예시 코스: '+R.ex+(R.exMod?'에서 바꿈':'')]:[]).concat(['√ 내맘대로 시티투어 (렌트카온리)','√ 투어날짜: ','√ 출발시 픽업장소/시간: '+R.s+' '+R.st,'√ 종료시 드랍장소/시간: '+R.e+' '+R.en,
+  /* 예시에서 시작한 코스면 문의 양식·결과 글 둘 다 맨 윗줄에 같은 줄(원장 261125-50·261125-77) — 직접 고른 코스는 없음 */
+  var ex=R.ex?['예시 코스: '+R.ex+(R.exMod?'에서 바꿈':'')]:[];
+  if(kind==='form')return ex.concat(['√ 내맘대로 시티투어 (렌트카온리)','√ 투어날짜: ','√ 출발시 픽업장소/시간: '+R.s+' '+R.st,'√ 종료시 드랍장소/시간: '+R.e+' '+R.en,
     '√ 인원(성인/아동): ','√ 예상투어경로: '+route,'√ 예상금액: '+money+' — '+R.veh+', 코스 계산기 기준','√ 비고: '+(link?'계산기 링크 '+link:'')]).join('\n');
-  return ['[세부 시티투어 코스 — 투윙스 코스 계산기]',
+  return ex.concat(['[세부 시티투어 코스 — 투윙스 코스 계산기]',
     '- 코스: '+R.s+' '+R.st+' 출발 → '+R.stops.map(function(x){return x.ko+'('+x.arr+'~'+x.dep+')'}).join(' → ')+' → '+R.e+' '+R.en+' 도착 (총 '+R.dur+')',
     '- 차량: '+R.veh+' · 예상 금액 '+money,
-    '- 기사·유류 포함, 입장료·톨비·주차비·식사는 별도 · 요금 2026년 11월 18일 기준, 정확한 금액은 상담 때 확인'].concat(link?['- 계산기에서 보기: '+link]:[]).join('\n');
+    '- 기사·유류 포함, 입장료·톨비·주차비·식사는 별도 · 요금 2026년 11월 18일 기준, 정확한 금액은 상담 때 확인']).concat(link?['- 계산기에서 보기: '+link]:[]).join('\n');
 }
 function copyText(t,done){
   var ok=false;
